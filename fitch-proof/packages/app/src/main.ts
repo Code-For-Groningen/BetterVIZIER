@@ -2,7 +2,34 @@
 import './style.css'
 // @ts-ignore
 import { init, check_proof, format_proof, fix_line_numbers_in_proof, export_to_latex } from '@workspace/library'
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor';
+
+// Configure Monaco Environment for web workers
+self.MonacoEnvironment = {
+  getWorkerUrl: function (workerId, label) {
+    const getWorkerModule = (moduleUrl, fallbackUrl) => {
+      return new URL(moduleUrl, import.meta.url).href;
+    };
+
+    switch (label) {
+      case 'json':
+        return getWorkerModule('/node_modules/monaco-editor/esm/vs/language/json/json.worker.js', '');
+      case 'css':
+      case 'scss':
+      case 'less':
+        return getWorkerModule('/node_modules/monaco-editor/esm/vs/language/css/css.worker.js', '');
+      case 'html':
+      case 'handlebars':
+      case 'razor':
+        return getWorkerModule('/node_modules/monaco-editor/esm/vs/language/html/html.worker.js', '');
+      case 'typescript':
+      case 'javascript':
+        return getWorkerModule('/node_modules/monaco-editor/esm/vs/language/typescript/ts.worker.js', '');
+      default:
+        return getWorkerModule('/node_modules/monaco-editor/esm/vs/editor/editor.worker.js', '');
+    }
+  }
+};
 
 monaco.languages.register({
   id: 'fitch',
