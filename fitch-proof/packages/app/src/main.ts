@@ -402,6 +402,62 @@ function findNumberedLineUp(monacoLineNumber: int) {
   return lineNumber
 }
 
+function calculateStructuralDepth(line: string) {
+  // For Fitch bar lines (containing dashes), we can't calculate depth from the line itself
+  // since the pipe is part of the bar notation, not structural indentation
+  if (line.includes('----') || /\|\s*-+/.test(line)) {
+    return -1; // Special case indicating we need to look elsewhere for depth
+  }
+  
+  // Count only structural pipes (those followed by space and content, not dashes)
+  let depth = 0;
+  let i = 0;
+  
+  while (i < line.length) {
+    if (line[i] === '|') {
+      // Check if this pipe is followed by dashes (Fitch bar notation)
+      let nextNonSpace = i + 1;
+      while (nextNonSpace < line.length && line[nextNonSpace] === ' ') {
+        nextNonSpace++;
+      }
+      
+      // If the pipe is not followed by dashes, count it as structural
+      if (nextNonSpace >= line.length || line[nextNonSpace] !== '-') {
+        depth++;
+      }
+    }
+    i++;
+  }
+  
+  return depth;
+}
+
+function findStructuralDepthFromContext(monacoLineNumber: number) {
+  const lines = model.getValue().split("\n");
+  
+  // Look at the line before and after to determine the correct depth
+  // Start by looking at the previous line
+  for (let i = monacoLineNumber - 2; i >= 0; i--) {
+    const line = lines[i];
+    const depth = calculateStructuralDepth(line);
+    if (depth >= 0) { // Valid depth found
+      return depth;
+    }
+  }
+  
+  // If no valid depth found above, look at the next line
+  for (let i = monacoLineNumber; i < lines.length; i++) {
+    const line = lines[i];
+    const depth = calculateStructuralDepth(line);
+    if (depth >= 0) { // Valid depth found
+      return depth;
+    }
+  }
+  
+  // Default to 1 if no context found
+  return 1;
+}
+
 
 // Listen to content changes (fires on every keystroke)
 model.onDidChangeContent((event) => {
@@ -418,9 +474,13 @@ model.onDidChangeContent((event) => {
       setTimeout(() => {
         const currentPosition = editor.getPosition();
         const lineNumber = findNumberedLineUp(currentPosition.lineNumber - 1)
-        const line = model.getValue().split("\n")[currentPosition.lineNumber - 2]
-        const depth = line.split("|").length
-        console.log("dsads", lineNumber)
+        const previousLine = model.getValue().split("\n")[currentPosition.lineNumber - 2]
+        let depth = calculateStructuralDepth(previousLine)
+        
+        // If the previous line is a Fitch bar line, get depth from context
+        if (depth === -1) {
+          depth = findStructuralDepthFromContext(currentPosition.lineNumber);
+        }
 
         editor.executeEdits('insert-after-newline', [{
           range: new monaco.Range(
@@ -429,7 +489,7 @@ model.onDidChangeContent((event) => {
             currentPosition.lineNumber,
             currentPosition.column
           ),
-          text: `${lineNumber + 1} ${Array.from(Array(depth)).join("| ")}`
+          text: `${lineNumber + 1} ${"| ".repeat(depth)}`
         }]);
       }, 0);
     }
