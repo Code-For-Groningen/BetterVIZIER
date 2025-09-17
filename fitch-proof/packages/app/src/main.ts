@@ -5,6 +5,8 @@ import './style.css'
 import { init, check_proof, format_proof, fix_line_numbers_in_proof, export_to_latex } from '@workspace/library'
 import * as monaco from 'monaco-editor';
 import MonacoErrorLens, { type MonacoEditor } from '@ym-han/monaco-error-lens';
+// Import examples and make them globally available
+import './examples.js';
 
 monaco.languages.register({
   id: 'fitch',

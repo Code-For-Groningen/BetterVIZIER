@@ -54,3 +54,8 @@ let ex3 = `1  | ∀x ∃y R(x,y) → ∃y ∀x R(x,y)
 25 | | ⊥                                       ∃ Elim: 17, 18-24
 26 | ¬¬∃x (∀y ¬R(x,y) ∨ ∀y R(y,x))             ¬ Intro: 2-25
 27 | ∃x (∀y ¬R(x,y) ∨ ∀y R(y,x))               ¬ Elim: 26`;
+
+// Make examples available globally for HTML onclick handlers
+window.ex1 = ex1;
+window.ex2 = ex2;
+window.ex3 = ex3;
