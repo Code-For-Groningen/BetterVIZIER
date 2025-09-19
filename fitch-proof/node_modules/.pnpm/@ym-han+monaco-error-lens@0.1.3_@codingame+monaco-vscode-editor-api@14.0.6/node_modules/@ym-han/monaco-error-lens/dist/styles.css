@@ -1,0 +1,491 @@
+/**
+ * Monaco Error Lens Styles
+ * Complete CSS for all Error Lens features
+ */
+
+/* CSS Variables for theme support */
+:root {
+  --monaco-error-lens-error-bg: rgba(228, 85, 84, 0.15);
+  --monaco-error-lens-error-fg: #ff6464;
+  --monaco-error-lens-error-border: rgba(228, 85, 84, 0.3);
+  
+  --monaco-error-lens-warning-bg: rgba(255, 148, 47, 0.15);
+  --monaco-error-lens-warning-fg: #fa973a;
+  --monaco-error-lens-warning-border: rgba(255, 148, 47, 0.3);
+  
+  --monaco-error-lens-info-bg: rgba(0, 183, 228, 0.15);
+  --monaco-error-lens-info-fg: #00b7e4;
+  --monaco-error-lens-info-border: rgba(0, 183, 228, 0.3);
+  
+  --monaco-error-lens-hint-bg: rgba(119, 136, 153, 0.15);
+  --monaco-error-lens-hint-fg: #778899;
+  --monaco-error-lens-hint-border: rgba(119, 136, 153, 0.3);
+
+  --monaco-error-lens-transition: all 0.2s ease-in-out;
+  --monaco-error-lens-border-radius: 3px;
+  --monaco-error-lens-font-size: 0.9em;
+  --monaco-error-lens-opacity: 0.7;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"], .monaco-editor.vs-dark {
+  --monaco-error-lens-error-bg: rgba(255, 100, 100, 0.15);
+  --monaco-error-lens-error-fg: #ff6464;
+  
+  --monaco-error-lens-warning-bg: rgba(255, 148, 47, 0.15);
+  --monaco-error-lens-warning-fg: #fa973a;
+  
+  --monaco-error-lens-info-bg: rgba(0, 183, 228, 0.15);
+  --monaco-error-lens-info-fg: #00b7e4;
+  
+  --monaco-error-lens-hint-bg: rgba(170, 170, 170, 0.15);
+  --monaco-error-lens-hint-fg: #aaaaaa;
+}
+
+/* High contrast theme */
+@media (prefers-contrast: high) {
+  :root {
+    --monaco-error-lens-error-bg: rgba(255, 0, 0, 0.25);
+    --monaco-error-lens-error-fg: #ff0000;
+    --monaco-error-lens-error-border: rgba(255, 0, 0, 0.5);
+    
+    --monaco-error-lens-warning-bg: rgba(255, 165, 0, 0.25);
+    --monaco-error-lens-warning-fg: #ffa500;
+    --monaco-error-lens-warning-border: rgba(255, 165, 0, 0.5);
+    
+    --monaco-error-lens-info-bg: rgba(0, 100, 255, 0.25);
+    --monaco-error-lens-info-fg: #0064ff;
+    --monaco-error-lens-info-border: rgba(0, 100, 255, 0.5);
+    
+    --monaco-error-lens-hint-bg: rgba(128, 128, 128, 0.25);
+    --monaco-error-lens-hint-fg: #808080;
+    --monaco-error-lens-hint-border: rgba(128, 128, 128, 0.5);
+    
+    --monaco-error-lens-opacity: 1;
+  }
+}
+
+/* Base styles for all Error Lens elements */
+.monaco-error-lens-message,
+.monaco-error-lens-line,
+.monaco-error-lens-gutter,
+.monaco-error-lens-range {
+  pointer-events: none;
+  position: relative;
+}
+
+/* Inline message styles */
+.monaco-error-lens-message {
+  display: inline-block;
+}
+
+.monaco-error-lens-message::after {
+  content: attr(data-message);
+  margin-left: 1ch;
+  opacity: var(--monaco-error-lens-opacity);
+  font-style: italic;
+  font-size: var(--monaco-error-lens-font-size);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50ch;
+  transition: var(--monaco-error-lens-transition);
+}
+
+/* Line highlighting styles */
+.monaco-error-lens-line {
+  border-radius: var(--monaco-error-lens-border-radius);
+  transition: var(--monaco-error-lens-transition);
+}
+
+.monaco-error-lens-line-error {
+  background-color: var(--monaco-error-lens-error-bg);
+  border-left: 3px solid var(--monaco-error-lens-error-border);
+}
+
+.monaco-error-lens-line-warning {
+  background-color: var(--monaco-error-lens-warning-bg);
+  border-left: 3px solid var(--monaco-error-lens-warning-border);
+}
+
+.monaco-error-lens-line-info {
+  background-color: var(--monaco-error-lens-info-bg);
+  border-left: 3px solid var(--monaco-error-lens-info-border);
+}
+
+.monaco-error-lens-line-hint {
+  background-color: var(--monaco-error-lens-hint-bg);
+  border-left: 3px solid var(--monaco-error-lens-hint-border);
+}
+
+/* Message color styles */
+.monaco-error-lens-message-error::after {
+  color: var(--monaco-error-lens-error-fg);
+}
+
+.monaco-error-lens-message-warning::after {
+  color: var(--monaco-error-lens-warning-fg);
+}
+
+.monaco-error-lens-message-info::after {
+  color: var(--monaco-error-lens-info-fg);
+}
+
+.monaco-error-lens-message-hint::after {
+  color: var(--monaco-error-lens-hint-fg);
+}
+
+/* Gutter icon styles */
+.monaco-error-lens-gutter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.monaco-error-lens-gutter::before {
+  font-weight: bold;
+  font-size: 0.8em;
+  line-height: 1;
+  display: inline-block;
+  transition: var(--monaco-error-lens-transition);
+}
+
+.monaco-error-lens-gutter-error::before {
+  content: '●';
+  color: var(--monaco-error-lens-error-fg);
+}
+
+.monaco-error-lens-gutter-warning::before {
+  content: '●';
+  color: var(--monaco-error-lens-warning-fg);
+}
+
+.monaco-error-lens-gutter-info::before {
+  content: '●';
+  color: var(--monaco-error-lens-info-fg);
+}
+
+.monaco-error-lens-gutter-hint::before {
+  content: '●';
+  color: var(--monaco-error-lens-hint-fg);
+}
+
+/* Letter style gutter icons */
+.monaco-error-lens-gutter.letter-style .monaco-error-lens-gutter-error::before {
+  content: 'E';
+  background-color: var(--monaco-error-lens-error-fg);
+  color: white;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.monaco-error-lens-gutter.letter-style .monaco-error-lens-gutter-warning::before {
+  content: 'W';
+  background-color: var(--monaco-error-lens-warning-fg);
+  color: white;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.monaco-error-lens-gutter.letter-style .monaco-error-lens-gutter-info::before {
+  content: 'I';
+  background-color: var(--monaco-error-lens-info-fg);
+  color: white;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.monaco-error-lens-gutter.letter-style .monaco-error-lens-gutter-hint::before {
+  content: 'H';
+  background-color: var(--monaco-error-lens-hint-fg);
+  color: white;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Square style gutter icons */
+.monaco-error-lens-gutter.square-style .monaco-error-lens-gutter-error::before {
+  content: '■';
+  color: var(--monaco-error-lens-error-fg);
+}
+
+.monaco-error-lens-gutter.square-style .monaco-error-lens-gutter-warning::before {
+  content: '■';
+  color: var(--monaco-error-lens-warning-fg);
+}
+
+.monaco-error-lens-gutter.square-style .monaco-error-lens-gutter-info::before {
+  content: '■';
+  color: var(--monaco-error-lens-info-fg);
+}
+
+.monaco-error-lens-gutter.square-style .monaco-error-lens-gutter-hint::before {
+  content: '■';
+  color: var(--monaco-error-lens-hint-fg);
+}
+
+/* Range highlighting styles */
+.monaco-error-lens-range {
+  border-radius: 2px;
+  transition: var(--monaco-error-lens-transition);
+}
+
+.monaco-error-lens-range-error {
+  background-color: var(--monaco-error-lens-error-bg);
+  border: 1px solid var(--monaco-error-lens-error-border);
+}
+
+.monaco-error-lens-range-warning {
+  background-color: var(--monaco-error-lens-warning-bg);
+  border: 1px solid var(--monaco-error-lens-warning-border);
+}
+
+.monaco-error-lens-range-info {
+  background-color: var(--monaco-error-lens-info-bg);
+  border: 1px solid var(--monaco-error-lens-info-border);
+}
+
+.monaco-error-lens-range-hint {
+  background-color: var(--monaco-error-lens-hint-bg);
+  border: 1px solid var(--monaco-error-lens-hint-border);
+}
+
+/* Animation support */
+@keyframes errorLensFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: var(--monaco-error-lens-opacity);
+    transform: translateX(0);
+  }
+}
+
+@keyframes errorLensPulse {
+  0%, 100% {
+    opacity: var(--monaco-error-lens-opacity);
+  }
+  50% {
+    opacity: calc(var(--monaco-error-lens-opacity) * 0.5);
+  }
+}
+
+.monaco-error-lens-message.animate::after {
+  animation: errorLensFadeIn 0.2s ease-in-out;
+}
+
+.monaco-error-lens-gutter.animate::before {
+  animation: errorLensPulse 2s ease-in-out infinite;
+}
+
+/* Hover effects */
+.monaco-error-lens-line:hover {
+  opacity: 1;
+}
+
+.monaco-error-lens-line:hover .monaco-error-lens-message::after {
+  opacity: 1;
+  max-width: none;
+}
+
+.monaco-error-lens-gutter:hover::before {
+  transform: scale(1.2);
+}
+
+/* Focus styles for accessibility */
+.monaco-error-lens-line:focus-within {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .monaco-error-lens-message::after {
+    display: none;
+  }
+  
+  :root {
+    --monaco-error-lens-font-size: 0.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .monaco-error-lens-line {
+    border-left-width: 2px;
+  }
+  
+  .monaco-error-lens-gutter::before {
+    font-size: 0.7em;
+  }
+}
+
+/* Print styles */
+@media print {
+  .monaco-error-lens-message::after {
+    display: none;
+  }
+  
+  .monaco-error-lens-line {
+    background-color: transparent !important;
+    border-left: none !important;
+  }
+  
+  .monaco-error-lens-gutter::before {
+    display: none;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .monaco-error-lens-message,
+  .monaco-error-lens-line,
+  .monaco-error-lens-gutter,
+  .monaco-error-lens-range {
+    transition: none;
+  }
+  
+  .monaco-error-lens-message.animate::after,
+  .monaco-error-lens-gutter.animate::before {
+    animation: none;
+  }
+}
+
+/* Custom scrollbar styles for Monaco editor with Error Lens */
+.monaco-editor.error-lens-enabled .monaco-scrollable-element .scrollbar {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.monaco-editor.error-lens-enabled .monaco-scrollable-element .scrollbar .slider {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Monaco editor integration styles */
+.monaco-editor .monaco-error-lens-message {
+  z-index: 1;
+}
+
+.monaco-editor .monaco-error-lens-line {
+  z-index: 0;
+}
+
+.monaco-editor .margin .monaco-error-lens-gutter {
+  z-index: 2;
+}
+
+/* Status bar styles (if using custom status bar) */
+.monaco-error-lens-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background-color: var(--monaco-editor-background, #1e1e1e);
+  color: var(--monaco-editor-foreground, #cccccc);
+  border-top: 1px solid var(--monaco-editor-border, #3c3c3c);
+  font-size: 12px;
+  font-family: var(--monaco-editor-font-family, 'Consolas', 'Monaco', monospace);
+}
+
+.monaco-error-lens-status-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.monaco-error-lens-status-item.error {
+  color: var(--monaco-error-lens-error-fg);
+}
+
+.monaco-error-lens-status-item.warning {
+  color: var(--monaco-error-lens-warning-fg);
+}
+
+.monaco-error-lens-status-item.info {
+  color: var(--monaco-error-lens-info-fg);
+}
+
+.monaco-error-lens-status-item.hint {
+  color: var(--monaco-error-lens-hint-fg);
+}
+
+/* Tooltip styles */
+.monaco-error-lens-tooltip {
+  position: absolute;
+  background-color: var(--monaco-editor-hover-background, #2d2d30);
+  color: var(--monaco-editor-hover-foreground, #cccccc);
+  border: 1px solid var(--monaco-editor-hover-border, #454545);
+  border-radius: 3px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: var(--monaco-editor-font-family, 'Consolas', 'Monaco', monospace);
+  max-width: 300px;
+  word-wrap: break-word;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading states */
+.monaco-error-lens-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.monaco-error-lens-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top-color: var(--monaco-editor-foreground, #cccccc);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error states */
+.monaco-error-lens-error-state {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px dashed #ff0000;
+  border-radius: 3px;
+  padding: 4px;
+}
+
+.monaco-error-lens-error-message {
+  color: #ff0000;
+  font-size: 11px;
+  font-style: italic;
+}
